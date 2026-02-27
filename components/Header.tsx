@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import {
   Box,
@@ -8,8 +10,60 @@ import {
   Play,
   Download,
 } from 'lucide-react';
+import { useEditor } from '../lib/editor-context';
+import { type ToolType } from '../lib/editor-types';
 
 export function Header() {
+  const { activeTool, setTool, zoom, setZoom } = useEditor();
+  const [showZoomMenu, setShowZoomMenu] = React.useState(false);
+  const zoomDropdownRef = React.useRef<HTMLDivElement>(null);
+
+  const handleToolClick = (tool: ToolType) => {
+    setTool(tool);
+  };
+
+  const handleZoomChange = (newZoom: number) => {
+    setTool('select');
+    setZoom(newZoom);
+    setShowZoomMenu(false);
+  };
+
+  const handleFitToScreen = () => {
+    setTool('select');
+    const container = document.querySelector('.canvas-scroll-container') as HTMLElement;
+    if (container) {
+      const containerWidth = container.clientWidth - 96;
+      const containerHeight = container.clientHeight - 96;
+      const widthRatio = containerWidth / 1280;
+      const heightRatio = containerHeight / 720;
+      const fitZoom = Math.min(widthRatio, heightRatio) * 100;
+      setZoom(Math.max(10, Math.min(200, Math.round(fitZoom))));
+    }
+    setShowZoomMenu(false);
+  };
+
+  const zoomOptions = [
+    { value: 25, label: '25%' },
+    { value: 50, label: '50%' },
+    { value: 75, label: '75%' },
+    { value: 100, label: '100%' },
+    { value: 150, label: '150%' },
+    { value: 200, label: '200%' },
+    { value: 0, label: 'Fit to screen', separator: true },
+  ];
+
+  const currentZoomLabel = zoomOptions.find(o => o.value === zoom)?.label || `${zoom}%`;
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (zoomDropdownRef.current && !zoomDropdownRef.current.contains(event.target as Node)) {
+        setShowZoomMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <header className="flex h-16 items-center justify-between border-b border-surface-lighter bg-surface-dark px-6 shrink-0 z-50">
       <div className="flex items-center gap-4">
@@ -27,17 +81,58 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4 bg-background-dark rounded-lg p-1 border border-surface-lighter">
-        <button type="button" className="p-2 hover:bg-surface-lighter rounded text-slate-400 hover:text-white transition-colors" title="Select">
+        <button 
+          type="button" 
+          onClick={() => handleToolClick('select')}
+          className={`p-2 rounded transition-colors ${activeTool === 'select' ? 'bg-surface-lighter text-white' : 'text-slate-400 hover:bg-surface-lighter hover:text-white'}`} 
+          title="Select"
+        >
           <MousePointer2 className="size-5" />
         </button>
-        <button type="button" className="p-2 hover:bg-surface-lighter rounded text-slate-400 hover:text-white transition-colors" title="Hand Tool">
+        <button 
+          type="button" 
+          onClick={() => handleToolClick('hand')}
+          className={`p-2 rounded transition-colors ${activeTool === 'hand' ? 'bg-surface-lighter text-white' : 'text-slate-400 hover:bg-surface-lighter hover:text-white'}`} 
+          title="Hand Tool"
+        >
           <Hand className="size-5" />
         </button>
         <div className="w-px h-4 bg-surface-lighter"></div>
-        <button type="button" className="flex items-center gap-2 px-3 py-1.5 hover:bg-surface-lighter rounded text-sm font-medium text-slate-300 hover:text-white transition-colors">
-          <span>100%</span>
-          <ChevronDown className="size-4" />
-        </button>
+        <div ref={zoomDropdownRef} className="relative">
+          <button 
+            type="button" 
+            onClick={() => setShowZoomMenu(!showZoomMenu)}
+            className="flex items-center gap-2 px-3 py-1.5 hover:bg-surface-lighter rounded text-sm font-medium text-slate-300 hover:text-white transition-colors"
+          >
+            <span>{currentZoomLabel}</span>
+            <ChevronDown className="size-4" />
+          </button>
+          {showZoomMenu && (
+            <div className="absolute top-full left-0 mt-1 bg-background-dark border border-surface-lighter rounded-lg shadow-xl overflow-hidden min-w-[120px] z-50">
+              {zoomOptions.map((option) => (
+                option.separator ? (
+                  <div key="separator" className="border-t border-surface-lighter my-1"></div>
+                ) : (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => handleZoomChange(option.value)}
+                    className={`w-full px-3 py-2 text-left text-sm font-medium transition-colors ${zoom === option.value ? 'bg-surface-lighter text-white' : 'text-slate-300 hover:bg-surface-lighter hover:text-white'}`}
+                  >
+                    {option.label}
+                  </button>
+                )
+              ))}
+              <button
+                type="button"
+                onClick={handleFitToScreen}
+                className="w-full px-3 py-2 text-left text-sm font-medium text-slate-300 hover:bg-surface-lighter hover:text-white transition-colors"
+              >
+                Fit to screen
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-4">

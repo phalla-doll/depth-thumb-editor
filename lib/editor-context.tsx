@@ -7,7 +7,8 @@ import {
   type EditorContext, 
   type EditorElement,
   type TextElement,
-  type ImageElement
+  type ImageElement,
+  type ToolType
 } from './editor-types';
 
 const generateId = (): string => {
@@ -23,6 +24,7 @@ const initialState: EditorState = {
   canvasWidth: DEFAULT_CANVAS_WIDTH,
   canvasHeight: DEFAULT_CANVAS_HEIGHT,
   zoom: 62,
+  activeTool: 'select',
   backgroundColor: '#000000',
   backgroundImage: null,
   backgroundBlur: 0,
@@ -120,6 +122,10 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, zoom: Math.max(10, Math.min(200, zoom)) }));
   }, []);
 
+  const setTool = useCallback((tool: ToolType) => {
+    setState(prev => ({ ...prev, activeTool: tool }));
+  }, []);
+
   const setCanvasSize = useCallback((width: number, height: number) => {
     setState(prev => ({ ...prev, canvasWidth: width, canvasHeight: height }));
   }, []);
@@ -151,6 +157,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     toggleLock,
     duplicateElement,
     setZoom,
+    setTool,
     setCanvasSize,
     setBackground,
     clearCanvas

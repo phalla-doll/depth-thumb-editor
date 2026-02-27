@@ -66,12 +66,15 @@ export interface ShapeElement extends BaseElement {
 
 export type EditorElement = TextElement | ImageElement | ShapeElement;
 
+export type ToolType = 'select' | 'hand';
+
 export interface EditorState {
   elements: EditorElement[];
   selectedElementId: string | null;
   canvasWidth: number;
   canvasHeight: number;
   zoom: number;
+  activeTool: ToolType;
   backgroundColor: string;
   backgroundImage: string | null;
   backgroundBlur: number;
@@ -88,6 +91,7 @@ export interface EditorActions {
   toggleLock: (id: string) => void;
   duplicateElement: (id: string) => void;
   setZoom: (zoom: number) => void;
+  setTool: (tool: ToolType) => void;
   setCanvasSize: (width: number, height: number) => void;
   setBackground: (image: string | null, blur?: number, brightness?: number) => void;
   clearCanvas: () => void;

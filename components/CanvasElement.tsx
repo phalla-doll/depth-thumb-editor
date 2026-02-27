@@ -15,7 +15,7 @@ interface CanvasElementProps {
 }
 
 export function CanvasElement({ element, isSelected, onMouseDown, fontFamily, fontWeight, isItalic }: CanvasElementProps) {
-  const { updateElement, zoom } = useEditor();
+  const { updateElement, zoom, activeTool } = useEditor();
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [elementStart, setElementStart] = useState({ x: 0, y: 0 });
@@ -29,12 +29,12 @@ export function CanvasElement({ element, isSelected, onMouseDown, fontFamily, fo
     transform: `rotate(${element.rotation}deg)`,
     opacity: element.opacity,
     zIndex: element.zIndex,
-    pointerEvents: element.locked ? 'none' as 'none' : 'auto' as 'auto',
-    cursor: element.locked ? 'not-allowed' : 'move'
+    pointerEvents: element.locked || activeTool !== 'select' ? 'none' as 'none' : 'auto' as 'auto',
+    cursor: element.locked ? 'not-allowed' : activeTool === 'select' ? 'move' : 'default'
   };
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (element.locked) return;
+    if (element.locked || activeTool !== 'select') return;
     
     e.preventDefault();
     e.stopPropagation();
@@ -43,7 +43,7 @@ export function CanvasElement({ element, isSelected, onMouseDown, fontFamily, fo
     setDragStart({ x: e.clientX, y: e.clientY });
     setElementStart({ x: element.position.x, y: element.position.y });
     onMouseDown(e, element.id);
-  }, [element.id, element.locked, element.position, onMouseDown]);
+  }, [element.id, element.locked, element.position, activeTool, onMouseDown]);
 
   useEffect(() => {
     if (!isDragging) return;
