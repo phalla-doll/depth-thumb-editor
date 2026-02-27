@@ -787,5 +787,27 @@
       "Variable"
     ],
     "path": "/fonts/Zodiak"
+  },
+  "Satoshi": {
+    "name": "Satoshi",
+    "web": {
+      "count": 48,
+      "formats": ["woff2", "woff", "eot", "ttf"]
+    },
+    "ttf": {
+      "count": 2,
+      "files": ["Satoshi-Variable.ttf", "Satoshi-VariableItalic.ttf"]
+    },
+    "otf": {
+      "count": 10,
+      "files": [
+        "Satoshi-Black.otf", "Satoshi-BlackItalic.otf", "Satoshi-Bold.otf",
+        "Satoshi-BoldItalic.otf", "Satoshi-Italic.otf", "Satoshi-Light.otf",
+        "Satoshi-LightItalic.otf", "Satoshi-Medium.otf", "Satoshi-MediumItalic.otf",
+        "Satoshi-Regular.otf"
+      ]
+    },
+    "weights": ["Black", "Bold", "Light", "Medium", "Regular", "Variable"],
+    "path": "/fonts/Satoshi"
   }
 }
