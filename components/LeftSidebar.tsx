@@ -18,7 +18,7 @@ import { useEditor } from '../lib/editor-context';
 import { type EditorElement, type TextContent } from '../lib/editor-types';
 
 export function LeftSidebar() {
-  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement } = useEditor();
+  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement, setCanvasSize, canvasWidth, canvasHeight } = useEditor();
   const [activeTab, setActiveTab] = useState<'assets' | 'layers'>('assets');
 
   const handleDragStart = useCallback((e: React.DragEvent, elementId: string) => {
@@ -124,6 +124,35 @@ export function LeftSidebar() {
       
       {activeTab === 'assets' ? (
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Canvas Size</h3>
+            <div className="grid grid-cols-5 gap-2">
+              {[
+                { label: '16:9', width: 1280, height: 720, name: 'YouTube' },
+                { label: '9:16', width: 1080, height: 1920, name: 'Shorts/Reels' },
+                { label: '1:1', width: 1080, height: 1080, name: 'Instagram Square' },
+                { label: '4:5', width: 1080, height: 1350, name: 'Instagram Portrait' },
+                { label: '4:3', width: 1440, height: 1080, name: 'Classic' }
+              ].map((preset) => {
+                const isActive = canvasWidth === preset.width && canvasHeight === preset.height;
+                return (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => setCanvasSize(preset.width, preset.height)}
+                    className={`flex flex-col items-center justify-center gap-1 p-2 rounded-lg transition-all ${
+                      isActive 
+                        ? 'bg-primary text-background-dark font-bold' 
+                        : 'bg-surface-lighter text-slate-300 hover:bg-surface-lighter/80'
+                    }`}
+                    title={preset.name}
+                  >
+                    <span className="text-xs">{preset.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <div className="grid grid-cols-4 gap-2">
             <button type="button" className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
               <UploadCloud className="size-5 group-hover:scale-110 transition-transform" />
@@ -152,10 +181,19 @@ export function LeftSidebar() {
                 { name: 'Tech', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAGFGJeE5_6PLMfk-7l2tAjhO18WRQFLMJC8iy59hPbo4IPXmpqGqrTT0yvrabzvwMpG7O2CzhWiGV7ezSl6hkZVYLJzdoNjaIvL9yQf1Nq09etAfi8iblN2tPBof97Fl_eHCftoJWvVdkpkXnd-Jr3fcNRZPUA0xL2su3T9_y0pbXyt3iqoMe-bFnPZreC9FttTTp9beF68YXwaDclkmne1lHpwzUZKKNK34oJaAz-9nUh7zahdJdUUiA0NDHc4_AlGDnvGU4iU3ns' },
                 { name: 'Podcast', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1_h9qXBcffK53k07QKlefxxpees4MA_2UKJ1d1fcUqPlqPyw4Y-H9lRHKlJeEwtsLDKOaXxuNtmxZniucZrGH9EqEzEIzLROZOGBL6KhbbF4wVQvfq4eDHRthnbitl8va5Kt1cM5YXziAYmjuFT2kyvbBi7KC8lGZH0_BAoeEtUcwKZgfjbXTH35rTs1yypS3Fn1SwD14YinvvZoSozJBuEynPo7cdZUfeZeTycyoRVFQk6CrYVZgQDGRlK4k8uUd6EyCXFgLwpno' }
               ].map((template) => (
-                <div key={template.name} className="aspect-video bg-slate-800 rounded border border-slate-700 hover:border-primary cursor-pointer relative group overflow-hidden">
+                <button
+                  type="button"
+                  key={template.name}
+                  className="aspect-video bg-slate-800 rounded border border-slate-700 hover:border-primary cursor-pointer relative group overflow-hidden"
+                  aria-label={`Use ${template.name} template`}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                    }
+                  }}
+                >
                   <div className="absolute inset-0 bg-cover bg-center opacity-70 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `url('${template.url}')` }}></div>
                   <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/80 to-transparent p-2 text-[10px] text-white font-medium">{template.name}</div>
-                </div>
+                </button>
               ))}
             </div>
           </div>

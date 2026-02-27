@@ -17,67 +17,16 @@ const generateId = (): string => {
 const DEFAULT_CANVAS_WIDTH = 1280;
 const DEFAULT_CANVAS_HEIGHT = 720;
 
-const createDefaultElements = (): EditorElement[] => {
-  const textElement: TextElement = {
-    id: generateId(),
-    name: 'Title: ULTIMATE GUIDE',
-    type: 'text',
-    position: { x: 48, y: 64 },
-    width: 600,
-    height: 200,
-    rotation: 0,
-    opacity: 1,
-    zIndex: 2,
-    visible: true,
-    locked: false,
-    content: {
-      text: 'ULTIMATE\nGUIDE',
-      fontSize: 96,
-      fontFamily: 'Boska',
-      fontWeight: 900,
-      isItalic: false,
-      fill: '#F97316',
-      stroke: '#000000',
-      strokeWidth: 4,
-      lineHeight: 0.85,
-      letterSpacing: -2
-    }
-  };
-
-  const imageElement: ImageElement = {
-    id: generateId(),
-    name: 'Subject Cutout',
-    type: 'image',
-    position: { x: 400, y: -36 },
-    width: 360,
-    height: 792,
-    rotation: 0,
-    opacity: 1,
-    zIndex: 1,
-    visible: true,
-    locked: false,
-    content: {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDyH1An3JDnMwOUqxxhdZPUoh-wGzVZ3dH5POprIqwaKOt4_gRrBMQv_lcRdDx164As3qzBKQGdy83Ky0gzDjWnMND2IRx9jnnhFc6tWUTMLvrP6RoHgKa94lzPc5fX2ZYYAc3ArTZSYZ3WfNfNLfy845xHRt7ZjSB5UNW44HVMkcXNQ7rFeYU5SGmXmdzdiP-bTPDzbLX8MH_-22rcYVC4Ich-In1ksSd7sXgu9clllPf6du-CyA4PA8VQTKNBJ7_mU1LreBv5LFIj',
-      objectFit: 'cover',
-      flipX: true,
-      flipY: false,
-      maskGradient: 'linear-gradient(to bottom, black 80%, transparent 100%)'
-    }
-  };
-
-  return [imageElement, textElement];
-};
-
 const initialState: EditorState = {
-  elements: createDefaultElements(),
+  elements: [],
   selectedElementId: null,
   canvasWidth: DEFAULT_CANVAS_WIDTH,
   canvasHeight: DEFAULT_CANVAS_HEIGHT,
   zoom: 62,
   backgroundColor: '#000000',
-  backgroundImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZCnCg8Ur-e-duG7zkM2q-45VkY4uVILN_3DfUs_UKXPugR3gho88yEpy415LE7BccxYFWH651BWv1cWK7k8x9jLHKu4Bm0GDnogti29dpvUkVngUK56XKtHIX4ukBMLm9rWsVOiDCE2ydZxLwDEHPCTjQDOU2B12OCxI8wOmB48ELgluTFgir3i7nKweV4XcYN-1xb5bduWThK_FGDiCARCwtmwdcimA2iXHJ9zuyChVd-tmC6xUW11FdwRsG5oVsWM1c0ItQIkEP',
-  backgroundBlur: 4,
-  backgroundBrightness: 0.6
+  backgroundImage: null,
+  backgroundBlur: 0,
+  backgroundBrightness: 1
 };
 
 const EditorContextInstance = createContext<EditorContext | null>(null);
@@ -171,6 +120,10 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, zoom: Math.max(10, Math.min(200, zoom)) }));
   }, []);
 
+  const setCanvasSize = useCallback((width: number, height: number) => {
+    setState(prev => ({ ...prev, canvasWidth: width, canvasHeight: height }));
+  }, []);
+
   const setBackground = useCallback((image: string | null, blur?: number, brightness?: number) => {
     setState(prev => ({
       ...prev,
@@ -198,6 +151,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     toggleLock,
     duplicateElement,
     setZoom,
+    setCanvasSize,
     setBackground,
     clearCanvas
   };

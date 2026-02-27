@@ -88,6 +88,7 @@ export interface EditorActions {
   toggleLock: (id: string) => void;
   duplicateElement: (id: string) => void;
   setZoom: (zoom: number) => void;
+  setCanvasSize: (width: number, height: number) => void;
   setBackground: (image: string | null, blur?: number, brightness?: number) => void;
   clearCanvas: () => void;
 }
