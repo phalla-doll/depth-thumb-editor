@@ -1,0 +1,791 @@
+{
+  "Author": {
+    "name": "Author",
+    "web": {
+      "count": 56,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Author-Variable.ttf",
+        "Author-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 12,
+      "files": [
+        "Author-Bold.otf",
+        "Author-BoldItalic.otf",
+        "Author-Extralight.otf",
+        "Author-ExtralightItalic.otf",
+        "Author-Italic.otf",
+        "Author-Light.otf",
+        "Author-LightItalic.otf",
+        "Author-Medium.otf",
+        "Author-MediumItalic.otf",
+        "Author-Regular.otf",
+        "Author-Semibold.otf",
+        "Author-SemiboldItalic.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/Author"
+  },
+  "BespokeSerif": {
+    "name": "BespokeSerif",
+    "web": {
+      "count": 48,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "BespokeSerif-Variable.ttf",
+        "BespokeSerif-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 10,
+      "files": [
+        "BespokeSerif-Bold.otf",
+        "BespokeSerif-BoldItalic.otf",
+        "BespokeSerif-Extrabold.otf",
+        "BespokeSerif-ExtraboldItalic.otf",
+        "BespokeSerif-Italic.otf",
+        "BespokeSerif-Light.otf",
+        "BespokeSerif-LightItalic.otf",
+        "BespokeSerif-Medium.otf",
+        "BespokeSerif-MediumItalic.otf",
+        "BespokeSerif-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extrabold",
+      "Light",
+      "Medium",
+      "Regular",
+      "Variable"
+    ],
+    "path": "/fonts/BespokeSerif"
+  },
+  "Boska": {
+    "name": "Boska",
+    "web": {
+      "count": 56,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Boska-Variable.ttf",
+        "Boska-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 12,
+      "files": [
+        "Boska-Black.otf",
+        "Boska-BlackItalic.otf",
+        "Boska-Bold.otf",
+        "Boska-BoldItalic.otf",
+        "Boska-Extralight.otf",
+        "Boska-ExtralightItalic.otf",
+        "Boska-Italic.otf",
+        "Boska-Light.otf",
+        "Boska-LightItalic.otf",
+        "Boska-Medium.otf",
+        "Boska-MediumItalic.otf",
+        "Boska-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Variable"
+    ],
+    "path": "/fonts/Boska"
+  },
+  "CabinetGrotesk": {
+    "name": "CabinetGrotesk",
+    "web": {
+      "count": 36,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "CabinetGrotesk-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 8,
+      "files": [
+        "CabinetGrotesk-Black.otf",
+        "CabinetGrotesk-Bold.otf",
+        "CabinetGrotesk-Extrabold.otf",
+        "CabinetGrotesk-Extralight.otf",
+        "CabinetGrotesk-Light.otf",
+        "CabinetGrotesk-Medium.otf",
+        "CabinetGrotesk-Regular.otf",
+        "CabinetGrotesk-Thin.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Extrabold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/CabinetGrotesk"
+  },
+  "Chillax": {
+    "name": "Chillax",
+    "web": {
+      "count": 28,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "Chillax-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 6,
+      "files": [
+        "Chillax-Bold.otf",
+        "Chillax-Extralight.otf",
+        "Chillax-Light.otf",
+        "Chillax-Medium.otf",
+        "Chillax-Regular.otf",
+        "Chillax-Semibold.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/Chillax"
+  },
+  "ClashDisplay": {
+    "name": "ClashDisplay",
+    "web": {
+      "count": 28,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "ClashDisplay-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 6,
+      "files": [
+        "ClashDisplay-Bold.otf",
+        "ClashDisplay-Extralight.otf",
+        "ClashDisplay-Light.otf",
+        "ClashDisplay-Medium.otf",
+        "ClashDisplay-Regular.otf",
+        "ClashDisplay-Semibold.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/ClashDisplay"
+  },
+  "ClashGrotesk": {
+    "name": "ClashGrotesk",
+    "web": {
+      "count": 28,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "ClashGrotesk-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 6,
+      "files": [
+        "ClashGrotesk-Bold.otf",
+        "ClashGrotesk-Extralight.otf",
+        "ClashGrotesk-Light.otf",
+        "ClashGrotesk-Medium.otf",
+        "ClashGrotesk-Regular.otf",
+        "ClashGrotesk-Semibold.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/ClashGrotesk"
+  },
+  "Excon": {
+    "name": "Excon",
+    "web": {
+      "count": 28,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "Excon-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 6,
+      "files": [
+        "Excon-Black.otf",
+        "Excon-Bold.otf",
+        "Excon-Light.otf",
+        "Excon-Medium.otf",
+        "Excon-Regular.otf",
+        "Excon-Thin.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Light",
+      "Medium",
+      "Regular",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/Excon"
+  },
+  "Gambetta": {
+    "name": "Gambetta",
+    "web": {
+      "count": 48,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Gambetta-Variable.ttf",
+        "Gambetta-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 10,
+      "files": [
+        "Gambetta-Bold.otf",
+        "Gambetta-BoldItalic.otf",
+        "Gambetta-Italic.otf",
+        "Gambetta-Light.otf",
+        "Gambetta-LightItalic.otf",
+        "Gambetta-Medium.otf",
+        "Gambetta-MediumItalic.otf",
+        "Gambetta-Regular.otf",
+        "Gambetta-Semibold.otf",
+        "Gambetta-SemiboldItalic.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/Gambetta"
+  },
+  "GeneralSans": {
+    "name": "GeneralSans",
+    "web": {
+      "count": 56,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "GeneralSans-Variable.ttf",
+        "GeneralSans-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 12,
+      "files": [
+        "GeneralSans-Bold.otf",
+        "GeneralSans-BoldItalic.otf",
+        "GeneralSans-Extralight.otf",
+        "GeneralSans-ExtralightItalic.otf",
+        "GeneralSans-Italic.otf",
+        "GeneralSans-Light.otf",
+        "GeneralSans-LightItalic.otf",
+        "GeneralSans-Medium.otf",
+        "GeneralSans-MediumItalic.otf",
+        "GeneralSans-Regular.otf",
+        "GeneralSans-Semibold.otf",
+        "GeneralSans-SemiboldItalic.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/GeneralSans"
+  },
+  "Panchang": {
+    "name": "Panchang",
+    "web": {
+      "count": 32,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "Panchang-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 7,
+      "files": [
+        "Panchang-Bold.otf",
+        "Panchang-Extrabold.otf",
+        "Panchang-Extralight.otf",
+        "Panchang-Light.otf",
+        "Panchang-Medium.otf",
+        "Panchang-Regular.otf",
+        "Panchang-Semibold.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extrabold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Variable"
+    ],
+    "path": "/fonts/Panchang"
+  },
+  "Ranade": {
+    "name": "Ranade",
+    "web": {
+      "count": 48,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Ranade-Variable.ttf",
+        "Ranade-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 10,
+      "files": [
+        "Ranade-Bold.otf",
+        "Ranade-BoldItalic.otf",
+        "Ranade-Italic.otf",
+        "Ranade-Light.otf",
+        "Ranade-LightItalic.otf",
+        "Ranade-Medium.otf",
+        "Ranade-MediumItalic.otf",
+        "Ranade-Regular.otf",
+        "Ranade-Thin.otf",
+        "Ranade-ThinItalic.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Light",
+      "Medium",
+      "Regular",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/Ranade"
+  },
+  "Sentient": {
+    "name": "Sentient",
+    "web": {
+      "count": 48,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Sentient-Variable.ttf",
+        "Sentient-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 10,
+      "files": [
+        "Sentient-Bold.otf",
+        "Sentient-BoldItalic.otf",
+        "Sentient-Extralight.otf",
+        "Sentient-ExtralightItalic.otf",
+        "Sentient-Italic.otf",
+        "Sentient-Light.otf",
+        "Sentient-LightItalic.otf",
+        "Sentient-Medium.otf",
+        "Sentient-MediumItalic.otf",
+        "Sentient-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Variable"
+    ],
+    "path": "/fonts/Sentient"
+  },
+  "Stardom": {
+    "name": "Stardom",
+    "web": {
+      "count": 4,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 0,
+      "files": []
+    },
+    "otf": {
+      "count": 1,
+      "files": [
+        "Stardom-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Regular"
+    ],
+    "path": "/fonts/Stardom"
+  },
+  "Supreme": {
+    "name": "Supreme",
+    "web": {
+      "count": 64,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Supreme-Variable.ttf",
+        "Supreme-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 14,
+      "files": [
+        "Supreme-Bold.otf",
+        "Supreme-BoldItalic.otf",
+        "Supreme-Extrabold.otf",
+        "Supreme-ExtraboldItalic.otf",
+        "Supreme-Extralight.otf",
+        "Supreme-ExtralightItalic.otf",
+        "Supreme-Italic.otf",
+        "Supreme-Light.otf",
+        "Supreme-LightItalic.otf",
+        "Supreme-Medium.otf",
+        "Supreme-MediumItalic.otf",
+        "Supreme-Regular.otf",
+        "Supreme-Thin.otf",
+        "Supreme-ThinItalic.otf"
+      ]
+    },
+    "weights": [
+      "Bold",
+      "Extrabold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/Supreme"
+  },
+  "Switzer": {
+    "name": "Switzer",
+    "web": {
+      "count": 80,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Switzer-Variable.ttf",
+        "Switzer-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 18,
+      "files": [
+        "Switzer-Black.otf",
+        "Switzer-BlackItalic.otf",
+        "Switzer-Bold.otf",
+        "Switzer-BoldItalic.otf",
+        "Switzer-Extrabold.otf",
+        "Switzer-ExtraboldItalic.otf",
+        "Switzer-Extralight.otf",
+        "Switzer-ExtralightItalic.otf",
+        "Switzer-Italic.otf",
+        "Switzer-Light.otf",
+        "Switzer-LightItalic.otf",
+        "Switzer-Medium.otf",
+        "Switzer-MediumItalic.otf",
+        "Switzer-Regular.otf",
+        "Switzer-Semibold.otf",
+        "Switzer-SemiboldItalic.otf",
+        "Switzer-Thin.otf",
+        "Switzer-ThinItalic.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Extrabold",
+      "Extralight",
+      "Light",
+      "Medium",
+      "Regular",
+      "Semibold",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/Switzer"
+  },
+  "Tanker": {
+    "name": "Tanker",
+    "web": {
+      "count": 4,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 0,
+      "files": []
+    },
+    "otf": {
+      "count": 1,
+      "files": [
+        "Tanker-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Regular"
+    ],
+    "path": "/fonts/Tanker"
+  },
+  "Telma": {
+    "name": "Telma",
+    "web": {
+      "count": 24,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 1,
+      "files": [
+        "Telma-Variable.ttf"
+      ]
+    },
+    "otf": {
+      "count": 5,
+      "files": [
+        "Telma-Black.otf",
+        "Telma-Bold.otf",
+        "Telma-Light.otf",
+        "Telma-Medium.otf",
+        "Telma-Regular.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Light",
+      "Medium",
+      "Regular",
+      "Variable"
+    ],
+    "path": "/fonts/Telma"
+  },
+  "Zodiak": {
+    "name": "Zodiak",
+    "web": {
+      "count": 56,
+      "formats": [
+        "woff2",
+        "woff",
+        "eot",
+        "ttf"
+      ]
+    },
+    "ttf": {
+      "count": 2,
+      "files": [
+        "Zodiak-Variable.ttf",
+        "Zodiak-VariableItalic.ttf"
+      ]
+    },
+    "otf": {
+      "count": 12,
+      "files": [
+        "Zodiak-Black.otf",
+        "Zodiak-BlackItalic.otf",
+        "Zodiak-Bold.otf",
+        "Zodiak-BoldItalic.otf",
+        "Zodiak-Extrabold.otf",
+        "Zodiak-ExtraboldItalic.otf",
+        "Zodiak-Italic.otf",
+        "Zodiak-Light.otf",
+        "Zodiak-LightItalic.otf",
+        "Zodiak-Regular.otf",
+        "Zodiak-Thin.otf",
+        "Zodiak-ThinItalic.otf"
+      ]
+    },
+    "weights": [
+      "Black",
+      "Bold",
+      "Extrabold",
+      "Light",
+      "Regular",
+      "Thin",
+      "Variable"
+    ],
+    "path": "/fonts/Zodiak"
+  }
+}

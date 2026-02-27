@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   MousePointer2,
@@ -22,6 +22,101 @@ import {
   RotateCw,
   Droplets
 } from 'lucide-react';
+import fontsMetadata from '../lib/fonts-metadata.json';
+
+interface FontMetadata {
+  name: string;
+  path: string;
+  web: {
+    count: number;
+    formats: string[];
+  };
+  otf: {
+    count: number;
+    files: string[];
+  };
+  ttf: {
+    count: number;
+    files: string[];
+  };
+  weights: string[];
+}
+
+const WEIGHT_MAP: Record<string, number> = {
+  'Thin': 100,
+  'Extralight': 200,
+  'Light': 300,
+  'Regular': 400,
+  'Medium': 500,
+  'Semibold': 600,
+  'Bold': 700,
+  'Extrabold': 800,
+  'Black': 900,
+  'Variable': 400
+};
+
+const getUprightWeights = (metadata: FontMetadata): string[] => {
+  return metadata.weights.filter(w => !w.includes('Italic'));
+};
+
+const getWeightNumbers = (metadata: FontMetadata): number[] => {
+  return getUprightWeights(metadata)
+    .map(w => WEIGHT_MAP[w] || 400)
+    .filter((w, i, arr) => arr.indexOf(w) === i)
+    .sort((a, b) => a - b);
+};
+
+const generateFontFaceCSS = (
+  fontName: string,
+  weightName: string,
+  weightNumber: number,
+  path: string,
+  format: 'woff2' | 'woff' = 'woff2'
+): string => {
+  const filename = `${fontName}-${weightName}.${format}`;
+  const fontUrl = `${path}/WEB/${filename}`;
+  
+  return `
+@font-face {
+  font-family: '${fontName}';
+  font-style: normal;
+  font-weight: ${weightNumber};
+  src: url('${fontUrl}') format('${format}');
+  font-display: swap;
+}
+`;
+};
+
+const useDynamicFontStyles = () => {
+  const insertFontStyles = useCallback((fontName: string, metadata: FontMetadata) => {
+    const styleId = `font-styles-${fontName}`;
+    
+    const existing = document.getElementById(styleId);
+    if (existing) existing.remove();
+    
+    const uprightWeights = getUprightWeights(metadata);
+    let css = '';
+    
+    uprightWeights.forEach(weightName => {
+      const weightNumber = WEIGHT_MAP[weightName] || 400;
+      
+      try {
+        css += generateFontFaceCSS(fontName, weightName, weightNumber, metadata.path, 'woff2');
+      } catch (error) {
+        console.error(`Error generating @font-face for ${fontName} ${weightName}:`, error);
+      }
+    });
+    
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = css;
+    document.head.appendChild(style);
+    
+    return styleId;
+  }, []);
+  
+  return { insertFontStyles };
+};
 
 function Header() {
   return (
@@ -108,7 +203,7 @@ function LeftSidebar() {
               { name: 'Gaming', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDLeUQwW-zpvXA_hzZSL05cN5swQpMG_R0tRtYgidiB8MgI9dXr3x22aboc1uMktoJqK_80sIGYa4YBgZdHRhVEPWcyHo81DyiJ-RymbQWAFO-vNFm9X3KpBLWqWHpTRCcnu7MSPsrNdawVO2MPGt2zQlipUPymRz_0tgLOadVQ1qN9JhrurjBkogMXbVamI_kEScU2PpcUPeWXOhM2Dx1N-EnwnWmeOHBCZ8qQeEvaM8Fp4Jhkh9aRsSwnmKLByesfnU9ePZDCcuXW' },
               { name: 'Vlog', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDoVYJXv4AqQh8-wzF29EH3xsfl5lvki9M2T9E1GDHVjl2acuGtKf5WR7cYcgiicFqcZavcYlhGHQpXJq-Tl_GhdbYpPql_cRbtzJ3GubftnkmN7N3JEG-zdvHgz40G1cizyELm6g47G8ENRgrJ3B1euXqV2t1wysgOpAFr_iMQ9LWyCAPoII9pxsvVTF7PdsOlfwBXIgxRbvvYQiL8qlMXler5ykGuOX6mpH6fBkke6pd054nAIbo3D5M_6jbGbDyFqK9L6br5haMl' },
               { name: 'Tech', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAGFGJeE5_6PLMfk-7l2tAjhO18WRQFLMJC8iy59hPbo4IPXmpqGqrTT0yvrabzvwMpG7O2CzhWiGV7ezSl6hkZVYLJzdoNjaIvL9yQf1Nq09etAfi8iblN2tPBof97Fl_eHCftoJWvVdkpkXnd-Jr3fcNRZPUA0xL2su3T9_y0pbXyt3iqoMe-bFnPZreC9FttTTp9beF68YXwaDclkmne1lHpwzUZKKNK34oJaAz-9nUh7zahdJdUUiA0NDHc4_AlGDnvGU4iU3ns' },
-              { name: 'Podcast', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1_h9qXBcffK53k07QKlefxxpees4MA_2UKJ5d1fcUqPlqPyw4Y-H9lRHKlJeEwtsLDKOaXxuNtmxZniucZrGH9EqEzEIzLROZOGBL6KhbbF4wVQvfq4eDHRthnbitl8va5Kt1cM5YXziAYmjuFT2kyvbBi7KC8lGZH0_BAoeEtUcwKZgfjbXTH35rTs1yypS3Fn1SwD14YinvvZoSozJBuEynPo7cdZUfeZeTycyoRVFQk6CrYVZgQDGRlK4k8uUd6EyCXFgLwpno' }
+              { name: 'Podcast', url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1_h9qXBcffK53k07QKlefxxpees4MA_2UKJ1d1fcUqPlqPyw4Y-H9lRHKlJeEwtsLDKOaXxuNtmxZniucZrGH9EqEzEIzLROZOGBL6KhbbF4wVQvfq4eDHRthnbitl8va5Kt1cM5YXziAYmjuFT2kyvbBi7KC8lGZH0_BAoeEtUcwKZgfjbXTH35rTs1yypS3Fn1SwD14YinvvZoSozJBuEynPo7cdZUfeZeTycyoRVFQk6CrYVZgQDGRlK4k8uUd6EyCXFgLwpno' }
             ].map((template) => (
               <div key={template.name} className="aspect-video bg-slate-800 rounded border border-slate-700 hover:border-primary cursor-pointer relative group overflow-hidden">
                 <div className="absolute inset-0 bg-cover bg-center opacity-70 group-hover:opacity-100 transition-opacity" style={{ backgroundImage: `url('${template.url}')` }}></div>
@@ -143,8 +238,8 @@ function LeftSidebar() {
   );
 }
 
-function CanvasArea({ selectedFont, selectedWeight }: { selectedFont: any, selectedWeight: number }) {
-  const fontFamily = selectedFont ? `"${selectedFont.name}", sans-serif` : 'var(--font-space-grotesk)';
+function CanvasArea({ selectedFont, selectedWeight, isItalic }: { selectedFont: FontMetadata | null, selectedWeight: number, isItalic: boolean }) {
+  const fontFamily = selectedFont ? `"${selectedFont.name}"` : 'var(--font-space-grotesk)';
   
   return (
     <main className="flex-1 bg-background-dark flex flex-col relative overflow-hidden">
@@ -153,17 +248,16 @@ function CanvasArea({ selectedFont, selectedWeight }: { selectedFont: any, selec
           <div className="absolute inset-0 bg-cover bg-center overflow-hidden" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZCnCg8Ur-e-duG7zkM2q-45VkY4uVILN_3DfUs_UKXPugR3gho88yEpy415LE7BccxYFWH651BWv1cWK7k8x9jLHKu4Bm0GDnogti29dpvUkVngUK56XKtHIX4ukBMLm9rWsVOiDCE2ydZxLwDEHPCTjQDOU2B12OCxI8wOmB48ELgluTFgir3i7nKweV4XcYN-1xb5bduWThK_FGDiCARCwtmwdcimA2iXHJ9zuyChVd-tmC6xUW11FdwRsG5oVsWM1c0ItQIkEP')", filter: "blur(4px) brightness(0.6)" }}></div>
           
           <div className="absolute bottom-0 right-10 h-[110%] w-[45%] z-10">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img alt="Person portrait cutout" className="w-full h-full object-cover object-top" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyH1An3JDnMwOUqxxhdZPUoh-wGzVZ3dH5POprIqwaKOt4_gRrBMQv_lcRdDx164As3qzBKQGdy83Ky0gzDjWnMND2IRx9jnnhFc6tWUTMLvrP6RoHgKa94lzPc5fX2ZYYAc3ArTZSYZ3WfNfNLfy845xHRt7ZjSB5UNW44HVMkcXNQ7rFeYU5SGmXmdzdiP-bTPDzbLX8MH_-22rcYVC4Ich-In1ksSd7sXgu9clllPf6du-CyA4PA8VQTKNBJ7_mU1LreBv5LFIj" style={{ WebkitMaskImage: "linear-gradient(to bottom, black 80%, transparent 100%)", maskImage: "linear-gradient(to bottom, black 80%, transparent 100%)", clipPath: "polygon(15% 0, 100% 0, 100% 100%, 0% 100%)", transform: "scaleX(-1)" }} />
             <div className="absolute inset-0 bg-primary/20 blur-3xl -z-10 rounded-full"></div>
           </div>
 
           <div className="absolute top-16 left-12 z-20 flex flex-col gap-0 select-none cursor-move border border-primary/50 hover:border-primary bg-primary/5 p-2 rounded">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-1 bg-primary rounded-full"></div>
-            <h2 className="text-7xl text-white italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
+            <h2 className={`text-7xl text-white tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777] ${isItalic ? 'italic' : ''}`} style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
               ULTIMATE
             </h2>
-            <h2 className="text-8xl text-primary italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
+            <h2 className={`text-8xl text-primary tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777] ${isItalic ? 'italic' : ''}`} style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
               GUIDE
             </h2>
           </div>
@@ -188,17 +282,20 @@ function RightSidebar({
   selectedFont, 
   setSelectedFont,
   selectedWeight,
-  setSelectedWeight
+  setSelectedWeight,
+  isItalic,
+  setIsItalic
 }: { 
-  fonts: any[], 
-  selectedFont: any, 
-  setSelectedFont: (f: any) => void,
+  fonts: FontMetadata[], 
+  selectedFont: FontMetadata | null, 
+  setSelectedFont: (f: FontMetadata) => void,
   selectedWeight: number,
-  setSelectedWeight: (w: number) => void
+  setSelectedWeight: (w: number) => void,
+  isItalic: boolean,
+  setIsItalic: (v: boolean) => void
 }) {
   const availableWeights = selectedFont 
-    ? Array.from(new Set(selectedFont.styles.map((s: any) => s.weight.number).filter((w: number) => w >= 100)))
-        .sort((a: any, b: any) => (a as number) - (b as number))
+    ? getWeightNumbers(selectedFont)
     : [400, 700, 900];
 
   return (
@@ -219,22 +316,21 @@ function RightSidebar({
           <div className="relative">
             <select 
               className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2.5 focus:ring-primary focus:border-primary appearance-none cursor-pointer outline-none"
-              value={selectedFont?.slug || ''}
+              value={selectedFont?.name || ''}
               onChange={(e) => {
-                const font = fonts.find(f => f.slug === e.target.value);
+                const font = fonts.find(f => f.name === e.target.value);
                 if (font) {
                   setSelectedFont(font);
-                  const weights = font.styles.map((s: any) => s.weight.number);
-                  if (!weights.includes(selectedWeight)) {
-                    const newWeight = weights.find((w: number) => w >= 100) || 400;
-                    setSelectedWeight(newWeight);
+                  const newWeights = getWeightNumbers(font);
+                  if (!newWeights.includes(selectedWeight)) {
+                    setSelectedWeight(newWeights[0] || 400);
                   }
                 }
               }}
             >
               {fonts.length === 0 && <option value="">Loading fonts...</option>}
               {fonts.map(font => (
-                <option key={font.slug} value={font.slug}>{font.name}</option>
+                <option key={font.name} value={font.name}>{font.name}</option>
               ))}
             </select>
             <ChevronDown className="absolute right-3 top-2.5 text-slate-400 pointer-events-none size-4" />
@@ -249,7 +345,7 @@ function RightSidebar({
                   value={selectedWeight}
                   onChange={(e) => setSelectedWeight(Number(e.target.value))}
                 >
-                  {availableWeights.map((w: any) => (
+                  {availableWeights.map((w: number) => (
                     <option key={w} value={w}>{w}</option>
                   ))}
                 </select>
@@ -262,6 +358,32 @@ function RightSidebar({
                 <input className="w-full bg-transparent border-0 text-white text-sm p-2 focus:ring-0 text-center outline-none" type="number" defaultValue="142" />
                 <span className="text-xs text-slate-500 pr-2">px</span>
               </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-slate-400 mb-1.5 block">Style</label>
+            <div className="flex gap-2">
+              <button 
+                className={`flex-1 p-2 rounded-lg border transition-all text-sm font-medium ${
+                  !isItalic 
+                    ? 'bg-primary text-background-dark border-primary' 
+                    : 'bg-surface-lighter border-slate-700 text-slate-400 hover:text-white'
+                }`}
+                onClick={() => setIsItalic(false)}
+              >
+                Regular
+              </button>
+              <button 
+                className={`flex-1 p-2 rounded-lg border transition-all text-sm font-medium ${
+                  isItalic 
+                    ? 'bg-primary text-background-dark border-primary' 
+                    : 'bg-surface-lighter border-slate-700 text-slate-400 hover:text-white'
+                }`}
+                onClick={() => setIsItalic(true)}
+              >
+                Italic
+              </button>
             </div>
           </div>
 
@@ -364,55 +486,44 @@ function RightSidebar({
 }
 
 export default function DepthThumbEditor() {
-  const [fonts, setFonts] = useState<any[]>([]);
-  const [selectedFont, setSelectedFont] = useState<any>(null);
-  const [selectedWeight, setSelectedWeight] = useState<number>(900);
-
-  useEffect(() => {
-    fetch('https://api.fontshare.com/v2/fonts?limit=150')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.fonts) {
-          setFonts(data.fonts);
-          // Default to Satoshi or the first available font
-          const defaultFont = data.fonts.find((f: any) => f.name === 'Satoshi') || data.fonts[0];
-          setSelectedFont(defaultFont);
-          
-          const weights = defaultFont.styles.map((s: any) => s.weight.number);
-          if (weights.includes(900)) setSelectedWeight(900);
-          else if (weights.includes(700)) setSelectedWeight(700);
-          else setSelectedWeight(weights.find((w: number) => w >= 100) || 400);
-        }
-      })
-      .catch(err => console.error('Error fetching fonts:', err));
-  }, []);
+  const fontsList = Object.values(fontsMetadata as Record<string, FontMetadata>);
+  const defaultFont = fontsList.find((f: FontMetadata) => f.name === 'Boska') || fontsList[0];
+  const defaultWeights = getWeightNumbers(defaultFont);
+  
+  const [fonts, setFonts] = useState<FontMetadata[]>(fontsList);
+  const [selectedFont, setSelectedFont] = useState<FontMetadata | null>(defaultFont);
+  const [selectedWeight, setSelectedWeight] = useState<number>(
+    defaultWeights.includes(900) ? 900 : 
+    defaultWeights.includes(700) ? 700 : 
+    defaultWeights[0] || 400
+  );
+  const [isItalic, setIsItalic] = useState<boolean>(false);
+  const { insertFontStyles } = useDynamicFontStyles();
 
   useEffect(() => {
     if (selectedFont) {
-      const linkId = `fontshare-${selectedFont.slug}`;
-      if (!document.getElementById(linkId)) {
-        const link = document.createElement('link');
-        link.id = linkId;
-        link.rel = 'stylesheet';
-        const weights = selectedFont.styles.map((s: any) => s.weight.number).join(',');
-        link.href = `https://api.fontshare.com/v2/css?f[]=${selectedFont.slug}@${weights}&display=swap`;
-        document.head.appendChild(link);
-      }
+      insertFontStyles(selectedFont.name, selectedFont);
     }
-  }, [selectedFont]);
+  }, [selectedFont, insertFontStyles]);
 
   return (
     <div className="bg-background-dark text-slate-100 font-sans overflow-hidden h-screen flex flex-col selection:bg-primary/30">
       <Header />
       <div className="flex flex-1 overflow-hidden relative">
         <LeftSidebar />
-        <CanvasArea selectedFont={selectedFont} selectedWeight={selectedWeight} />
+        <CanvasArea 
+          selectedFont={selectedFont} 
+          selectedWeight={selectedWeight}
+          isItalic={isItalic}
+        />
         <RightSidebar 
           fonts={fonts} 
           selectedFont={selectedFont} 
           setSelectedFont={setSelectedFont}
           selectedWeight={selectedWeight}
           setSelectedWeight={setSelectedWeight}
+          isItalic={isItalic}
+          setIsItalic={setIsItalic}
         />
       </div>
     </div>
