@@ -1,0 +1,5 @@
+{
+  "name": "DepthThumb Editor",
+  "description": "A thumbnail editor interface with 3D depth and effects.",
+  "requestFramePermissions": []
+}
