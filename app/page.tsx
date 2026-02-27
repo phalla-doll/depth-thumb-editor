@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   MousePointer2,
@@ -141,7 +143,9 @@ function LeftSidebar() {
   );
 }
 
-function CanvasArea() {
+function CanvasArea({ selectedFont, selectedWeight }: { selectedFont: any, selectedWeight: number }) {
+  const fontFamily = selectedFont ? `"${selectedFont.name}", sans-serif` : 'var(--font-space-grotesk)';
+  
   return (
     <main className="flex-1 bg-background-dark flex flex-col relative overflow-hidden">
       <div className="flex-1 flex items-center justify-center p-12 overflow-auto bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]">
@@ -156,10 +160,10 @@ function CanvasArea() {
 
           <div className="absolute top-16 left-12 z-20 flex flex-col gap-0 select-none cursor-move border border-primary/50 hover:border-primary bg-primary/5 p-2 rounded">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-1 bg-primary rounded-full"></div>
-            <h2 className="text-7xl font-black text-white italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000" }}>
+            <h2 className="text-7xl text-white italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
               ULTIMATE
             </h2>
-            <h2 className="text-8xl font-black text-primary italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000" }}>
+            <h2 className="text-8xl text-primary italic tracking-tighter leading-[0.85] drop-shadow-[0_4px_0_#db2777]" style={{ textShadow: "4px 4px 0px #000", fontFamily, fontWeight: selectedWeight }}>
               GUIDE
             </h2>
           </div>
@@ -179,7 +183,24 @@ function CanvasArea() {
   );
 }
 
-function RightSidebar() {
+function RightSidebar({ 
+  fonts, 
+  selectedFont, 
+  setSelectedFont,
+  selectedWeight,
+  setSelectedWeight
+}: { 
+  fonts: any[], 
+  selectedFont: any, 
+  setSelectedFont: (f: any) => void,
+  selectedWeight: number,
+  setSelectedWeight: (w: number) => void
+}) {
+  const availableWeights = selectedFont 
+    ? Array.from(new Set(selectedFont.styles.map((s: any) => s.weight.number).filter((w: number) => w >= 100)))
+        .sort((a: any, b: any) => (a as number) - (b as number))
+    : [400, 700, 900];
+
   return (
     <aside className="w-80 bg-surface-dark border-l border-surface-lighter flex flex-col shrink-0 z-40 overflow-y-auto">
       <div className="p-4 border-b border-surface-lighter bg-surface-lighter/10">
@@ -196,11 +217,25 @@ function RightSidebar() {
             <span className="text-[10px] text-primary cursor-pointer hover:underline">Browse Fonts</span>
           </div>
           <div className="relative">
-            <select className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2.5 focus:ring-primary focus:border-primary appearance-none cursor-pointer outline-none">
-              <option>Space Grotesk</option>
-              <option>Inter</option>
-              <option>Montserrat</option>
-              <option>Bebas Neue</option>
+            <select 
+              className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2.5 focus:ring-primary focus:border-primary appearance-none cursor-pointer outline-none"
+              value={selectedFont?.slug || ''}
+              onChange={(e) => {
+                const font = fonts.find(f => f.slug === e.target.value);
+                if (font) {
+                  setSelectedFont(font);
+                  const weights = font.styles.map((s: any) => s.weight.number);
+                  if (!weights.includes(selectedWeight)) {
+                    const newWeight = weights.find((w: number) => w >= 100) || 400;
+                    setSelectedWeight(newWeight);
+                  }
+                }
+              }}
+            >
+              {fonts.length === 0 && <option value="">Loading fonts...</option>}
+              {fonts.map(font => (
+                <option key={font.slug} value={font.slug}>{font.name}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-3 top-2.5 text-slate-400 pointer-events-none size-4" />
           </div>
@@ -209,10 +244,14 @@ function RightSidebar() {
             <div>
               <label className="text-xs font-semibold text-slate-400 mb-1.5 block">Weight</label>
               <div className="relative">
-                <select className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2 focus:ring-primary focus:border-primary appearance-none outline-none">
-                  <option>Black</option>
-                  <option>Bold</option>
-                  <option>Regular</option>
+                <select 
+                  className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2 focus:ring-primary focus:border-primary appearance-none outline-none"
+                  value={selectedWeight}
+                  onChange={(e) => setSelectedWeight(Number(e.target.value))}
+                >
+                  {availableWeights.map((w: any) => (
+                    <option key={w} value={w}>{w}</option>
+                  ))}
                 </select>
                 <ChevronDown className="absolute right-2 top-2.5 text-slate-400 pointer-events-none size-4" />
               </div>
@@ -325,13 +364,56 @@ function RightSidebar() {
 }
 
 export default function DepthThumbEditor() {
+  const [fonts, setFonts] = useState<any[]>([]);
+  const [selectedFont, setSelectedFont] = useState<any>(null);
+  const [selectedWeight, setSelectedWeight] = useState<number>(900);
+
+  useEffect(() => {
+    fetch('https://api.fontshare.com/v2/fonts?limit=150')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.fonts) {
+          setFonts(data.fonts);
+          // Default to Satoshi or the first available font
+          const defaultFont = data.fonts.find((f: any) => f.name === 'Satoshi') || data.fonts[0];
+          setSelectedFont(defaultFont);
+          
+          const weights = defaultFont.styles.map((s: any) => s.weight.number);
+          if (weights.includes(900)) setSelectedWeight(900);
+          else if (weights.includes(700)) setSelectedWeight(700);
+          else setSelectedWeight(weights.find((w: number) => w >= 100) || 400);
+        }
+      })
+      .catch(err => console.error('Error fetching fonts:', err));
+  }, []);
+
+  useEffect(() => {
+    if (selectedFont) {
+      const linkId = `fontshare-${selectedFont.slug}`;
+      if (!document.getElementById(linkId)) {
+        const link = document.createElement('link');
+        link.id = linkId;
+        link.rel = 'stylesheet';
+        const weights = selectedFont.styles.map((s: any) => s.weight.number).join(',');
+        link.href = `https://api.fontshare.com/v2/css?f[]=${selectedFont.slug}@${weights}&display=swap`;
+        document.head.appendChild(link);
+      }
+    }
+  }, [selectedFont]);
+
   return (
     <div className="bg-background-dark text-slate-100 font-sans overflow-hidden h-screen flex flex-col selection:bg-primary/30">
       <Header />
       <div className="flex flex-1 overflow-hidden relative">
         <LeftSidebar />
-        <CanvasArea />
-        <RightSidebar />
+        <CanvasArea selectedFont={selectedFont} selectedWeight={selectedWeight} />
+        <RightSidebar 
+          fonts={fonts} 
+          selectedFont={selectedFont} 
+          setSelectedFont={setSelectedFont}
+          selectedWeight={selectedWeight}
+          setSelectedWeight={setSelectedWeight}
+        />
       </div>
     </div>
   );
