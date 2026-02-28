@@ -34,7 +34,7 @@ export default function DepthThumbEditor() {
       <div className="bg-background-dark text-slate-100 font-sans overflow-hidden h-screen flex flex-col selection:bg-primary/30">
         <Header />
         <div className="flex flex-1 overflow-hidden relative">
-          <LeftSidebar />
+          <LeftSidebar selectedFont={selectedFont} />
           <CanvasArea 
             selectedFont={selectedFont} 
             selectedWeight={selectedWeight}
