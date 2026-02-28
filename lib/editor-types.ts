@@ -28,7 +28,7 @@ export interface ImageContent {
 }
 
 export interface ShapeContent {
-  shapeType: 'rectangle' | 'circle' | 'badge';
+  shapeType: 'rectangle' | 'rounded-rectangle' | 'circle' | 'squircle' | 'badge';
   fill: string;
   stroke: string;
   strokeWidth: number;

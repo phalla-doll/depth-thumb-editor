@@ -133,7 +133,7 @@ export function CanvasArea({ selectedFont, selectedWeight, isItalic }: CanvasAre
           neonGlowEnabled: true,
           neonGlowIntensity: 75,
           neonGlowType: 'soft',
-          smartBlurIntensity: 4,
+          smartBlurIntensity: 0,
           content: {
             src,
             objectFit: 'contain',

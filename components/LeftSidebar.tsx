@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import {
   UploadCloud,
   Type,
@@ -15,16 +15,20 @@ import {
   Plus
 } from 'lucide-react';
 import { useEditor } from '../lib/editor-context';
-import { type EditorElement, type TextContent } from '../lib/editor-types';
+import { type EditorElement, type TextContent, type ImageElement, type ShapeElement } from '../lib/editor-types';
 import { type FontMetadata } from '../lib/font-utils';
+import { ComingSoonModal } from './ComingSoonModal';
+import { Square, Circle, Shield } from 'lucide-react';
 
 interface LeftSidebarProps {
   selectedFont?: FontMetadata | null;
 }
 
 export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
-  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement, addElement, setCanvasSize, canvasWidth, canvasHeight } = useEditor();
+  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement, addElement, setCanvasSize, canvasWidth, canvasHeight, isPreviewMode } = useEditor();
   const [activeTab, setActiveTab] = useState<'assets' | 'layers'>('assets');
+  const [showComingSoonModal, setShowComingSoonModal] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragStart = useCallback((e: React.DragEvent, elementId: string) => {
     e.dataTransfer.setData('text/plain', elementId);
@@ -52,6 +56,99 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
     }
   }, [elements, updateElement]);
 
+  const handleUploadClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleAIGenClick = useCallback(() => {
+    setShowComingSoonModal(true);
+  }, []);
+
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const src = event.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height) * 0.8;
+        const newWidth = img.width * scale;
+        const newHeight = img.height * scale;
+        const newX = (canvasWidth - newWidth) / 2;
+        const newY = (canvasHeight - newHeight) / 2;
+
+        const newElement: EditorElement = {
+          id: `el-${Date.now()}`,
+          name: file.name.replace(/\.[^/.]+$/, ''),
+          type: 'image',
+          position: { x: newX, y: newY },
+          width: newWidth,
+          height: newHeight,
+          rotation: 0,
+          opacity: 1,
+          zIndex: elements.length,
+          visible: true,
+          locked: false,
+          depthEnabled: false,
+          extrusionDepth: 24,
+          shadowDistance: 12,
+          zRotation: -5,
+          neonGlowEnabled: true,
+          neonGlowIntensity: 75,
+          neonGlowType: 'soft',
+          smartBlurIntensity: 0,
+          content: {
+            src,
+            objectFit: 'contain',
+            flipX: false,
+            flipY: false
+          }
+        };
+
+        addElement(newElement);
+        setActiveTab('layers');
+      };
+      img.src = src;
+    };
+    reader.readAsDataURL(file);
+  }, [canvasWidth, canvasHeight, elements.length, addElement]);
+
+  const addShapeElement = useCallback((shapeType: 'rectangle' | 'rounded-rectangle' | 'circle' | 'squircle' | 'badge') => {
+    const newElement: EditorElement = {
+      id: `el-${Date.now()}`,
+      name: `${shapeType.charAt(0).toUpperCase() + shapeType.slice(1).replace('-', ' ')}`,
+      type: 'shape',
+      position: { x: 100, y: 100 },
+      width: 200,
+      height: 200,
+      rotation: 0,
+      opacity: 1,
+      zIndex: elements.length,
+      visible: true,
+      locked: false,
+      depthEnabled: false,
+      extrusionDepth: 24,
+      shadowDistance: 12,
+      zRotation: -5,
+      neonGlowEnabled: true,
+      neonGlowIntensity: 75,
+      neonGlowType: 'soft',
+      smartBlurIntensity: 0,
+      content: {
+        shapeType,
+        fill: '#6366f1',
+        stroke: '#4f46e5',
+        strokeWidth: 2,
+        rotation: 0
+      }
+    };
+
+    addElement(newElement);
+    setActiveTab('layers');
+  }, [elements.length, addElement]);
+
   const addTextElement = useCallback(() => {
     const newElement: EditorElement = {
       id: `el-${Date.now()}`,
@@ -72,26 +169,25 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
       neonGlowEnabled: true,
       neonGlowIntensity: 75,
       neonGlowType: 'soft',
-      smartBlurIntensity: 4,
+      smartBlurIntensity: 0,
       content: {
-        text: 'Text',
+        text: 'Add text here',
         fontSize: 48,
-        fontFamily: selectedFont?.name || 'Boska',
-        fontWeight: 400,
+        fontFamily: selectedFont?.name || 'Inter',
+        fontWeight: 700,
         isItalic: false,
-        fill: '#000000',
+        fill: '#ffffff',
         stroke: '#000000',
-        strokeWidth: 2,
+        strokeWidth: 0,
         shadowEnabled: false,
-        lineHeight: 1,
+        lineHeight: 1.2,
         letterSpacing: 0
       }
     };
 
     addElement(newElement);
-    selectElement(newElement.id);
     setActiveTab('layers');
-  }, [elements, addElement, selectElement, selectedFont]);
+  }, [elements.length, selectedFont, addElement]);
 
   const getLayerIcon = (type: string) => {
     switch (type) {
@@ -165,7 +261,7 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-2">
-            <button type="button" className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
+            <button type="button" onClick={handleUploadClick} className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
               <UploadCloud className="size-5 group-hover:scale-110 transition-transform" />
               <span className="text-[10px]">Upload</span>
             </button>
@@ -173,12 +269,12 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
               <Type className="size-5" />
               <span className="text-[10px]">Text</span>
             </button>
-            <button type="button" className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
+            <button type="button" onClick={handleAIGenClick} className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
               <Sparkles className="size-5 group-hover:scale-110 transition-transform" />
               <span className="text-[10px]">AI Gen</span>
             </button>
-            <button type="button" className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg hover:bg-surface-lighter text-slate-400 hover:text-primary transition-colors group">
-              <Shapes className="size-5 group-hover:scale-110 transition-transform" />
+            <button type="button" className="flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-surface-lighter text-primary transition-colors">
+              <Shapes className="size-5" />
               <span className="text-[10px]">Shapes</span>
             </button>
           </div>
@@ -208,6 +304,67 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
               ))}
             </div>
           </div>
+
+          <div>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Shapes</h3>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => addShapeElement('rectangle')}
+                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface-lighter rounded border border-slate-700 hover:border-primary hover:bg-surface-lighter/80 transition-all group"
+                aria-label="Add Rectangle shape"
+              >
+                <div className="w-12 h-12 bg-primary/20 group-hover:bg-primary/30 rounded-none flex items-center justify-center transition-colors">
+                  <Square className="size-6 text-primary" />
+                </div>
+                <span className="text-[10px] text-slate-300 group-hover:text-white transition-colors">Rectangle</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => addShapeElement('rounded-rectangle')}
+                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface-lighter rounded border border-slate-700 hover:border-primary hover:bg-surface-lighter/80 transition-all group"
+                aria-label="Add Rounded Rectangle shape"
+              >
+                <div className="w-12 h-12 bg-primary/20 group-hover:bg-primary/30 rounded-md flex items-center justify-center transition-colors">
+                  <Square className="size-6 text-primary" />
+                </div>
+                <span className="text-[10px] text-slate-300 group-hover:text-white transition-colors">Rounded</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => addShapeElement('squircle')}
+                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface-lighter rounded border border-slate-700 hover:border-primary hover:bg-surface-lighter/80 transition-all group"
+                aria-label="Add Squircle shape"
+              >
+                <div className="w-12 h-12 bg-primary/20 group-hover:bg-primary/30 rounded-[2rem] flex items-center justify-center transition-colors">
+                  <Square className="size-6 text-primary" />
+                </div>
+                <span className="text-[10px] text-slate-300 group-hover:text-white transition-colors">Squircle</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => addShapeElement('circle')}
+                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface-lighter rounded border border-slate-700 hover:border-primary hover:bg-surface-lighter/80 transition-all group"
+                aria-label="Add Circle shape"
+              >
+                <div className="w-12 h-12 bg-primary/20 group-hover:bg-primary/30 rounded-full flex items-center justify-center transition-colors">
+                  <Circle className="size-6 text-primary" />
+                </div>
+                <span className="text-[10px] text-slate-300 group-hover:text-white transition-colors">Circle</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => addShapeElement('badge')}
+                className="flex flex-col items-center justify-center gap-2 p-3 bg-surface-lighter rounded border border-slate-700 hover:border-primary hover:bg-surface-lighter/80 transition-all group"
+                aria-label="Add Badge shape"
+              >
+                <div className="w-12 h-12 bg-primary/20 group-hover:bg-primary/30 rounded-3xl flex items-center justify-center transition-colors">
+                  <Shield className="size-6 text-primary" />
+                </div>
+                <span className="text-[10px] text-slate-300 group-hover:text-white transition-colors">Badge</span>
+              </button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto p-4">
@@ -220,14 +377,15 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
           </div>
           <div className="flex flex-col gap-1">
             {[...elements].reverse().map((element) => (
-              <div
+              <button
+                type="button"
                 key={element.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, element.id)}
                 onDragOver={handleDragOver}
                 onDrop={(e) => handleDrop(e, element.id)}
                 onClick={() => selectElement(element.id)}
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors w-full text-left ${
                   selectedElementId === element.id 
                     ? 'bg-surface-lighter border-l-2 border-primary' 
                     : 'hover:bg-surface-lighter border-l-2 border-transparent'
@@ -287,7 +445,7 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
                     <Trash2 className="size-3.5" />
                   </button>
                 </div>
-              </div>
+              </button>
             ))}
             {elements.length === 0 && (
               <div className="text-center py-8 text-slate-500 text-sm">
@@ -297,6 +455,16 @@ export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
           </div>
         </div>
       )}
+
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+      />
+
+      <ComingSoonModal isOpen={showComingSoonModal} onClose={() => setShowComingSoonModal(false)} />
     </aside>
   );
 }

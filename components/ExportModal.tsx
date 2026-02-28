@@ -13,7 +13,7 @@ interface ExportModalProps {
 }
 
 export function ExportModal({ isOpen, onClose, canvasWidth, canvasHeight }: ExportModalProps) {
-  const { backgroundColor } = useEditor();
+  const { backgroundColor, zoom, setZoom } = useEditor();
   const [includeBackground, setIncludeBackground] = React.useState(true);
   const [isExporting, setIsExporting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -24,7 +24,13 @@ export function ExportModal({ isOpen, onClose, canvasWidth, canvasHeight }: Expo
     setIsExporting(true);
     setError(null);
 
+    const originalZoom = zoom;
+
     try {
+      setZoom(100);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await document.fonts.ready;
+
       const canvasElement = document.getElementById('export-canvas');
       if (!canvasElement) {
         throw new Error('Canvas element not found');
@@ -42,6 +48,7 @@ export function ExportModal({ isOpen, onClose, canvasWidth, canvasHeight }: Expo
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
     } finally {
+      setZoom(originalZoom);
       setIsExporting(false);
     }
   };

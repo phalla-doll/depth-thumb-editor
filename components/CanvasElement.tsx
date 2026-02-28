@@ -289,7 +289,7 @@ export function CanvasElement({ element, isSelected, onMouseDown, fontFamily, fo
           style={{
             backgroundColor: shapeContent.fill,
             border: `${shapeContent.strokeWidth}px solid ${shapeContent.stroke}`,
-            borderRadius: shapeContent.shapeType === 'circle' ? '50%' : shapeContent.shapeType === 'badge' ? '9999px' : '0',
+            borderRadius: shapeContent.shapeType === 'circle' ? '50%' : shapeContent.shapeType === 'badge' ? '9999px' : shapeContent.shapeType === 'squircle' ? '24px' : shapeContent.shapeType === 'rounded-rectangle' ? '8px' : '0',
             transform: `rotate(${shapeContent.rotation}deg)`
           }}
         >

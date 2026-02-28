@@ -207,8 +207,12 @@ function PreviewElement({ element }: PreviewElementProps) {
       shapeStyle.borderRadius = '50%';
     } else if (content.shapeType === 'badge') {
       shapeStyle.borderRadius = '9999px';
-    } else {
+    } else if (content.shapeType === 'squircle') {
+      shapeStyle.borderRadius = '24px';
+    } else if (content.shapeType === 'rounded-rectangle') {
       shapeStyle.borderRadius = '8px';
+    } else {
+      shapeStyle.borderRadius = '0';
     }
 
     return (
