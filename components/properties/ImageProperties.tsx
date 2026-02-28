@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw, RotateCw, Image as ImageIcon } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
 import { useEditor, useSelectedElement } from '../../lib/editor-context';
 import { type ImageElement, type ImageContent } from '../../lib/editor-types';
 import { Input } from '../ui/input';
@@ -89,19 +89,15 @@ export function ImageProperties() {
 
       <div>
         <Label htmlFor="rotation-img">Rotation</Label>
-        <div className="flex items-center gap-2">
-          <RotateCcw className="text-slate-500 size-3" />
-          <Slider 
-            id="rotation-img"
-            min={-180}
-            max={180}
-            value={selectedElement.rotation}
-            onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
-            showValue
-            valueLabel="°"
-          />
-          <RotateCw className="text-slate-500 size-3" />
-        </div>
+        <Slider 
+          id="rotation-img"
+          min={-180}
+          max={180}
+          value={selectedElement.rotation}
+          onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
+          showValue
+          valueLabel="°"
+        />
       </div>
 
       <div>
