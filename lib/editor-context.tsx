@@ -28,7 +28,9 @@ const initialState: EditorState = {
   backgroundColor: '#000000',
   backgroundImage: null,
   backgroundBlur: 0,
-  backgroundBrightness: 1
+  backgroundBrightness: 1,
+  showSafeZones: false,
+  isPreviewMode: false
 };
 
 const EditorContextInstance = createContext<EditorContext | null>(null);
@@ -130,12 +132,13 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, canvasWidth: width, canvasHeight: height }));
   }, []);
 
-  const setBackground = useCallback((image: string | null, blur?: number, brightness?: number) => {
+  const setBackground = useCallback((image: string | null, blur?: number, brightness?: number, color?: string) => {
     setState(prev => ({
       ...prev,
       backgroundImage: image,
       backgroundBlur: blur ?? prev.backgroundBlur,
-      backgroundBrightness: brightness ?? prev.backgroundBrightness
+      backgroundBrightness: brightness ?? prev.backgroundBrightness,
+      backgroundColor: color ?? prev.backgroundColor
     }));
   }, []);
 
@@ -144,6 +147,14 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       ...initialState,
       elements: []
     });
+  }, []);
+
+  const toggleSafeZones = useCallback(() => {
+    setState(prev => ({ ...prev, showSafeZones: !prev.showSafeZones }));
+  }, []);
+
+  const togglePreviewMode = useCallback(() => {
+    setState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }));
   }, []);
 
   const contextValue: EditorContext = {
@@ -160,7 +171,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     setTool,
     setCanvasSize,
     setBackground,
-    clearCanvas
+    clearCanvas,
+    toggleSafeZones,
+    togglePreviewMode
   };
 
   return (

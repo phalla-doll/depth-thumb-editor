@@ -71,3 +71,10 @@ export const getDefaultFont = (): FontMetadata => {
 export const getFontsList = (): FontMetadata[] => {
   return Object.values(fontsMetadata as Record<string, FontMetadata>);
 };
+
+export const getClosestWeight = (availableWeights: number[], targetWeight: number): number => {
+  if (availableWeights.length === 0) return 400;
+  return availableWeights.reduce((prev, curr) => 
+    Math.abs(curr - targetWeight) < Math.abs(prev - targetWeight) ? curr : prev
+  );
+};
