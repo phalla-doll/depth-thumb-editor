@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import './globals.css'; // Global styles
 
@@ -10,6 +10,15 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: 'DepthThumb Editor Dashboard',
   description: 'DepthThumb Editor Dashboard',
+  manifest: '/manifest',
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#f97316',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
