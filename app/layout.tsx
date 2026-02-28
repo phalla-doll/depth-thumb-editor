@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     icon: '/icon.svg',
     apple: '/icon.svg',
   },
+  openGraph: {
+    images: '/og-main.png',
+  },
 };
 
 export const viewport: Viewport = {
