@@ -10,7 +10,7 @@ interface PreviewModalProps {
 }
 
 export function PreviewModal({ isOpen, onClose }: PreviewModalProps) {
-  const { canvasWidth, canvasHeight, backgroundImage, backgroundBlur, backgroundBrightness, elements } = useEditor();
+  const { canvasWidth, canvasHeight, backgroundColor, backgroundImage, backgroundBlur, backgroundBrightness, elements } = useEditor();
   const [previewZoom, setPreviewZoom] = React.useState(100);
 
   const canvasElement = React.useRef<HTMLDivElement>(null);
@@ -90,12 +90,13 @@ export function PreviewModal({ isOpen, onClose }: PreviewModalProps) {
         <div className="bg-background-dark border border-surface-lighter rounded-xl shadow-2xl overflow-auto max-h-[85vh]">
           <div 
             ref={canvasElement}
-            className="relative bg-black"
+            className="relative"
             style={{ 
               width: `${canvasWidth * previewZoom / 100}px`,
               aspectRatio: `${canvasWidth} / ${canvasHeight}`,
               minWidth: canvasWidth,
-              minHeight: canvasHeight
+              minHeight: canvasHeight,
+              backgroundColor
             }}
           >
             {backgroundImage && (
