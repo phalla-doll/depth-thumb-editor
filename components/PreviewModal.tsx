@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { X, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import Image from 'next/image';
 import { useEditor } from '../lib/editor-context';
 
 interface PreviewModalProps {
@@ -180,16 +181,24 @@ function PreviewElement({ element }: PreviewElementProps) {
           overflow: 'hidden',
         }}
       >
-        <img
-          src={content.src}
-          alt={element.name}
+        <div
           style={{
             width: '100%',
             height: '100%',
-            objectFit: content.objectFit,
             transform: `${content.flipX ? 'scaleX(-1)' : ''} ${content.flipY ? 'scaleY(-1)' : ''}`,
+            position: 'relative',
           }}
-        />
+        >
+          <Image
+            src={content.src}
+            alt={element.name}
+            fill
+            style={{
+              objectFit: content.objectFit,
+            }}
+            sizes="(max-width: 768px) 100vw, 1280px"
+          />
+        </div>
       </div>
     );
   }

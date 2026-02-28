@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Type, ImageIcon as Image, Shapes } from 'lucide-react';
+import { Type, ImageIcon as ImageIcon, Shapes } from 'lucide-react';
+import Image from 'next/image';
 import { useEditor } from '../lib/editor-context';
 import { type EditorElement, type TextContent, type ImageContent, type ShapeContent } from '../lib/editor-types';
 
@@ -256,18 +257,27 @@ export function CanvasElement({ element, isSelected, onMouseDown, fontFamily, fo
         }}
         className="overflow-hidden"
       >
-        <img
-          src={imageContent.src}
-          alt={element.name}
-          className="w-full h-full object-cover"
+        <div
           style={{
-            objectFit: imageContent.objectFit,
+            width: '100%',
+            height: '100%',
             transform: `scaleX(${imageContent.flipX ? -1 : 1}) scaleY(${imageContent.flipY ? -1 : 1})`,
             WebkitMaskImage: imageContent.maskGradient,
-            maskImage: imageContent.maskGradient
+            maskImage: imageContent.maskGradient,
+            position: 'relative',
           }}
-          draggable={false}
-        />
+        >
+          <Image
+            src={imageContent.src}
+            alt={element.name}
+            fill
+            className="w-full h-full object-cover"
+            style={{
+              objectFit: imageContent.objectFit,
+            }}
+            sizes="(max-width: 768px) 100vw, 1280px"
+          />
+        </div>
         {selectionBox}
       </div>
     );
