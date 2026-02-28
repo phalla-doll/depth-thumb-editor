@@ -16,9 +16,14 @@ import {
 } from 'lucide-react';
 import { useEditor } from '../lib/editor-context';
 import { type EditorElement, type TextContent } from '../lib/editor-types';
+import { type FontMetadata } from '../lib/font-utils';
 
-export function LeftSidebar() {
-  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement, setCanvasSize, canvasWidth, canvasHeight } = useEditor();
+interface LeftSidebarProps {
+  selectedFont?: FontMetadata | null;
+}
+
+export function LeftSidebar({ selectedFont }: LeftSidebarProps) {
+  const { elements, selectedElementId, selectElement, toggleVisibility, toggleLock, duplicateElement, removeElement, updateElement, addElement, setCanvasSize, canvasWidth, canvasHeight } = useEditor();
   const [activeTab, setActiveTab] = useState<'assets' | 'layers'>('assets');
 
   const handleDragStart = useCallback((e: React.DragEvent, elementId: string) => {
@@ -60,27 +65,33 @@ export function LeftSidebar() {
       zIndex: elements.length,
       visible: true,
       locked: false,
+      depthEnabled: false,
+      extrusionDepth: 24,
+      shadowDistance: 12,
+      zRotation: -5,
+      neonGlowEnabled: true,
+      neonGlowIntensity: 75,
+      neonGlowType: 'soft',
+      smartBlurIntensity: 4,
       content: {
         text: 'Text',
         fontSize: 48,
-        fontFamily: 'Boska',
+        fontFamily: selectedFont?.name || 'Boska',
         fontWeight: 400,
         isItalic: false,
-        fill: '#FFFFFF',
+        fill: '#000000',
         stroke: '#000000',
         strokeWidth: 2,
+        shadowEnabled: false,
         lineHeight: 1,
         letterSpacing: 0
       }
     };
-    
-    const updatedElements = [...elements, newElement];
-    updatedElements.forEach((el, i) => {
-      updateElement(el.id, { zIndex: i });
-    });
+
+    addElement(newElement);
     selectElement(newElement.id);
     setActiveTab('layers');
-  }, [elements, updateElement, selectElement]);
+  }, [elements, addElement, selectElement, selectedFont]);
 
   const getLayerIcon = (type: string) => {
     switch (type) {
