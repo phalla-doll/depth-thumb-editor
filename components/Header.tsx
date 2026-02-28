@@ -12,10 +12,13 @@ import {
 } from 'lucide-react';
 import { useEditor } from '../lib/editor-context';
 import { type ToolType } from '../lib/editor-types';
+import { ExportModal } from './ExportModal';
+import { PreviewModal } from './PreviewModal';
 
 export function Header() {
-  const { activeTool, setTool, zoom, setZoom } = useEditor();
+  const { activeTool, setTool, zoom, setZoom, canvasWidth, canvasHeight, showSafeZones, isPreviewMode, toggleSafeZones, togglePreviewMode } = useEditor();
   const [showZoomMenu, setShowZoomMenu] = React.useState(false);
+  const [showExportModal, setShowExportModal] = React.useState(false);
   const zoomDropdownRef = React.useRef<HTMLDivElement>(null);
 
   const handleToolClick = (tool: ToolType) => {
@@ -137,19 +140,39 @@ export function Header() {
 
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <button type="button" className="flex items-center justify-center size-9 rounded-lg bg-surface-lighter text-slate-300 hover:bg-surface-lighter/80 hover:text-white transition-colors border border-transparent hover:border-slate-600" title="Safe Zones">
+          <button 
+            type="button" 
+            onClick={toggleSafeZones}
+            className={`flex items-center justify-center size-9 rounded-lg transition-colors border ${showSafeZones ? 'bg-primary text-background-dark border-primary' : 'bg-surface-lighter text-slate-300 hover:bg-surface-lighter/80 hover:text-white border-transparent hover:border-slate-600'}`} 
+            title="Safe Zones"
+          >
             <Grid className="size-5" />
           </button>
-          <button type="button" className="flex items-center justify-center size-9 rounded-lg bg-surface-lighter text-slate-300 hover:bg-surface-lighter/80 hover:text-white transition-colors border border-transparent hover:border-slate-600" title="Preview">
+          <button 
+            type="button" 
+            onClick={togglePreviewMode}
+            className={`flex items-center justify-center size-9 rounded-lg transition-colors border ${isPreviewMode ? 'bg-primary text-background-dark border-primary' : 'bg-surface-lighter text-slate-300 hover:bg-surface-lighter/80 hover:text-white border-transparent hover:border-slate-600'}`} 
+            title="Preview"
+          >
             <Play className="size-5" />
           </button>
         </div>
-        <button type="button" className="flex items-center justify-center gap-2 h-10 px-6 rounded-lg bg-primary hover:bg-primary/90 text-background-dark font-bold text-sm transition-all shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+        <button type="button" onClick={() => setShowExportModal(true)} className="flex items-center justify-center gap-2 h-10 px-6 rounded-lg bg-primary hover:bg-primary/90 text-background-dark font-bold text-sm transition-all shadow-[0_0_15px_rgba(249,115,22,0.3)] hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]">
           <Download className="size-5" />
           <span>Export</span>
         </button>
         <div className="bg-center bg-no-repeat bg-cover rounded-full size-9 ring-2 ring-surface-lighter cursor-pointer ml-2" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBNMx-qk_-oYoMbXkulddTM__Q9EiEbFnmbK6xXznLxuwOYZNjSRSb82wKAO3KtGQpd09l8cAc4SpgB32etL-ERk0AVmtdXdoXPiV97TB_muNaAQn452sDyTKpoMKoyS3ec0AvojaZmN28cARy_4-ir2U3uTMFi2IW0JDxQ6ZpSpXSYu1BUIYx3rPrWtiziYp1DcuD54VkBRHGdr067Ag8MmtHOIXNwxfc1qYoa-zyHehruvtaQoH80zTENz3jvLCvEHfMnviJ6eoCj")' }}></div>
       </div>
+      <ExportModal 
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        canvasWidth={canvasWidth}
+        canvasHeight={canvasHeight}
+      />
+      <PreviewModal 
+        isOpen={isPreviewMode}
+        onClose={togglePreviewMode}
+      />
     </header>
   );
 }
