@@ -101,7 +101,6 @@ npm run clean     # Clean Next.js cache
 1. Create a new branch for the feature
 2. Write the code following guidelines above
 3. Test manually (no automated tests currently)
-4. Run `npm run lint` and fix issues
-5. Build with `npm run build` to verify
-6. Commit with clear, descriptive messages
-7. Submit pull request for review
+4. Run `npm run lint` to verify changes and fix issues
+5. Commit with clear, descriptive messages
+6. Submit pull request for review

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { RotateCcw, RotateCw, Shapes } from 'lucide-react';
+import { Shapes } from 'lucide-react';
 import { useEditor, useSelectedElement } from '../../lib/editor-context';
 import { type ShapeElement } from '../../lib/editor-types';
 import { Input } from '../ui/input';
@@ -52,19 +52,15 @@ export function ShapeProperties() {
 
       <div>
         <Label htmlFor="rotation-shape">Rotation</Label>
-        <div className="flex items-center gap-2">
-          <RotateCcw className="text-slate-500 size-3" />
-          <Slider 
-            id="rotation-shape"
-            min={-180}
-            max={180}
-            value={selectedElement.rotation}
-            onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
-            showValue
-            valueLabel="°"
-          />
-          <RotateCw className="text-slate-500 size-3" />
-        </div>
+        <Slider 
+          id="rotation-shape"
+          min={-180}
+          max={180}
+          value={selectedElement.rotation}
+          onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
+          showValue
+          valueLabel="°"
+        />
       </div>
 
       <div>

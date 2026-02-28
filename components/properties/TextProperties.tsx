@@ -1,19 +1,21 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import { ChevronDown, RotateCcw, RotateCw, Box } from 'lucide-react';
+import React, { useCallback, useEffect } from 'react';
+import { ChevronDown, Box } from 'lucide-react';
 import { useEditor, useSelectedElement } from '../../lib/editor-context';
 import { type TextElement, type TextContent } from '../../lib/editor-types';
+import { type FontMetadata, getWeightNumbers, getClosestWeight } from '../../lib/font-utils';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
 import { Label } from '../ui/label';
 
 interface TextPropertiesProps {
-  fonts: string[];
+  fonts: FontMetadata[];
   availableWeights: number[];
+  onFontLoad: (font: FontMetadata) => Promise<void>;
 }
 
-export function TextProperties({ fonts, availableWeights }: TextPropertiesProps) {
+export function TextProperties({ fonts, availableWeights, onFontLoad }: TextPropertiesProps) {
   const selectedElement = useSelectedElement() as TextElement | null;
   const { updateElement } = useEditor();
   
@@ -25,6 +27,22 @@ export function TextProperties({ fonts, availableWeights }: TextPropertiesProps)
       content: { ...textContent!, ...updates }
     });
   }, [selectedElement, textContent, updateElement]);
+
+  const handleFontChange = useCallback(async (fontFamily: string) => {
+    const selectedFont = fonts.find(f => f.name === fontFamily);
+    if (selectedFont && textContent) {
+      await onFontLoad(selectedFont);
+
+      const newWeights = getWeightNumbers(selectedFont);
+      const currentWeight = textContent.fontWeight;
+
+      const newWeight = newWeights.includes(currentWeight)
+        ? currentWeight
+        : getClosestWeight(newWeights, currentWeight);
+
+      handleUpdateTextContent({ fontFamily, fontWeight: newWeight });
+    }
+  }, [fonts, onFontLoad, handleUpdateTextContent, textContent]);
 
   if (!selectedElement || selectedElement.type !== 'text' || !textContent) {
     return null;
@@ -41,11 +59,11 @@ export function TextProperties({ fonts, availableWeights }: TextPropertiesProps)
           id="font-family"
           className="w-full bg-surface-lighter border border-slate-700 text-white text-sm rounded-lg p-2.5 focus:ring-primary focus:border-primary appearance-none cursor-pointer outline-none"
           value={textContent.fontFamily}
-          onChange={(e) => handleUpdateTextContent({ fontFamily: e.target.value })}
+          onChange={(e) => handleFontChange(e.target.value)}
         >
           {fonts.length === 0 && <option value="">Loading fonts...</option>}
           {fonts.map(font => (
-            <option key={font} value={font}>{font}</option>
+            <option key={font.name} value={font.name}>{font.name}</option>
           ))}
         </select>
         <ChevronDown className="absolute right-3 top-2.5 text-slate-400 pointer-events-none size-4" />
@@ -73,7 +91,7 @@ export function TextProperties({ fonts, availableWeights }: TextPropertiesProps)
           <div className="flex items-center bg-surface-lighter border border-slate-700 rounded-lg overflow-hidden">
             <Input 
               id="font-size"
-              className="w-full bg-transparent border-0 text-white text-sm p-2 focus:ring-0 text-center" 
+              className="w-full bg-transparent border-0 text-white text-sm p-2 focus:ring-0" 
               type="number" 
               value={textContent.fontSize}
               onChange={(e) => handleUpdateTextContent({ fontSize: Number(e.target.value) })}
@@ -153,23 +171,37 @@ export function TextProperties({ fonts, availableWeights }: TextPropertiesProps)
 
       <div>
         <Label htmlFor="stroke-width">Stroke Width</Label>
-        <div className="flex items-center gap-2">
-          <Slider 
-            id="stroke-width"
-            min={0}
-            max={10}
-            value={textContent.strokeWidth}
-            onChangeValue={(v) => handleUpdateTextContent({ strokeWidth: v })}
-            showValue
-            valueLabel="px"
-          />
-        </div>
+        <Slider 
+          id="stroke-width"
+          min={0}
+          max={10}
+          value={textContent.strokeWidth}
+          onChangeValue={(v) => handleUpdateTextContent({ strokeWidth: v })}
+          showValue
+          valueLabel="px"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="shadow-toggle">Shadow</Label>
+        <button
+          type="button"
+          id="shadow-toggle"
+          className={`w-full p-2.5 rounded-lg border transition-all text-sm font-medium ${
+            textContent.shadowEnabled 
+              ? 'bg-primary text-background-dark border-primary' 
+              : 'bg-surface-lighter border-slate-700 text-slate-400 hover:text-white'
+          }`}
+          onClick={() => handleUpdateTextContent({ shadowEnabled: !textContent.shadowEnabled })}
+        >
+          {textContent.shadowEnabled ? 'Enabled' : 'Disabled'}
+        </button>
       </div>
 
       <div className="space-y-4 pt-4 border-t border-surface-lighter">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-            <Box className="text-secondary size-4" />
+            <Box className="text-primary size-4" />
             Position &amp; Size
           </h3>
         </div>
@@ -222,19 +254,15 @@ export function TextProperties({ fonts, availableWeights }: TextPropertiesProps)
 
         <div>
           <Label htmlFor="rotation">Rotation</Label>
-          <div className="flex items-center gap-2">
-            <RotateCcw className="text-slate-500 size-3" />
-            <Slider 
-              id="rotation"
-              min={-180}
-              max={180}
-              value={selectedElement.rotation}
-              onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
-              showValue
-              valueLabel="°"
-            />
-            <RotateCw className="text-slate-500 size-3" />
-          </div>
+          <Slider 
+            id="rotation"
+            min={-180}
+            max={180}
+            value={selectedElement.rotation}
+            onChangeValue={(v) => updateElement(selectedElement.id, { rotation: v })}
+            showValue
+            valueLabel="°"
+          />
         </div>
 
         <div>

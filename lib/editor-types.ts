@@ -14,6 +14,7 @@ export interface TextContent {
   fill: string;
   stroke: string;
   strokeWidth: number;
+  shadowEnabled: boolean;
   lineHeight: number;
   letterSpacing: number;
 }
@@ -47,6 +48,14 @@ export interface BaseElement {
   zIndex: number;
   visible: boolean;
   locked: boolean;
+  depthEnabled: boolean;
+  extrusionDepth: number;
+  shadowDistance: number;
+  zRotation: number;
+  neonGlowEnabled: boolean;
+  neonGlowIntensity: number;
+  neonGlowType: 'soft' | 'hard';
+  smartBlurIntensity: number;
 }
 
 export interface TextElement extends BaseElement {
@@ -79,6 +88,8 @@ export interface EditorState {
   backgroundImage: string | null;
   backgroundBlur: number;
   backgroundBrightness: number;
+  showSafeZones: boolean;
+  isPreviewMode: boolean;
 }
 
 export interface EditorActions {
@@ -93,8 +104,10 @@ export interface EditorActions {
   setZoom: (zoom: number) => void;
   setTool: (tool: ToolType) => void;
   setCanvasSize: (width: number, height: number) => void;
-  setBackground: (image: string | null, blur?: number, brightness?: number) => void;
+  setBackground: (image: string | null, blur?: number, brightness?: number, color?: string) => void;
   clearCanvas: () => void;
+  toggleSafeZones: () => void;
+  togglePreviewMode: () => void;
 }
 
 export type EditorContext = EditorState & EditorActions;
